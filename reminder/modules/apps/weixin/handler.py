@@ -1,0 +1,105 @@
+import json
+import logging
+import re
+import requests
+from rest_framework.exceptions import ValidationError
+
+from nansang import settings
+from weixin.models import BirthDayRecord
+from weixin.serializers import BirthDayRecordSerializer
+
+
+class PoorHandler(object):
+    """
+    穷人版的handle,针对特定text回复
+    """
+    handlers = []
+
+    def filter(self, *args):
+        def wraps(func):
+            self.add_handle(func, list(args))
+            return func
+
+        return wraps
+
+    def add_handle(self, func, rules):
+        if len(rules) > 1:
+            for x in rules:
+                self.add_handle(func, [x])
+        content = rules[0]
+        if isinstance(content, str):
+            def _check_content(message):
+                return message.content == content
+        elif isinstance(content, type(re.compile("regex_test"))):
+            def _check_content(message):
+                return content.match(message.content)
+        else:
+            raise Exception("%s is invalid rule" % content)
+
+        def wraps(message):
+            _check_result = _check_content(message)
+            if _check_result:
+                if isinstance(_check_result, bool):
+                    _check_result = None
+                return func(message)
+
+        self.handlers.append(wraps)
+
+    def handle_message(self, message):
+        for func in self.handlers:
+            res = func(message)
+            if res:
+                return res
+
+
+handler = PoorHandler()
+
+uri = settings.SERVER_URL
+
+logger = logging.getLogger('django')
+
+
+@handler.filter(re.compile("^nansang add"))
+def nansang_add(message):
+    mandatory_args = ["-n", "-b", "-g", "-l"]
+    fields_list = ["name", "birth_day", "group_name", "is_lunar_calendar"]
+    content = message.content.lstrip("nansang add").split(" ")
+    error_message = "error format, nansang add -n name -b xxxx-xx-xx -g group -l"
+    try:
+        mapping = {fields_list[index]: content[content.index(x) + 1] for index, x in enumerate(mandatory_args) if
+                   x != -1 and x != "-l"}
+    except (IndexError, ValueError):
+        return error_message
+    if len(mapping.keys()) != len(mandatory_args) - 1:
+        return error_message
+    mapping['is_lunar_calendar'] = 1 if '-l' not in content else 2  # 默认为农历
+    mapping['open_id'] = message.source
+    s = BirthDayRecordSerializer(data=mapping)
+    try:
+        s.is_valid(raise_exception=True)
+    except ValidationError as e:
+        return "failed due to %s" % e.default_detail
+    s.save()
+    return "success,the item id is %s" % s.instance.id
+
+
+@handler.filter(re.compile("^nansang list$"))
+def nansang_list(message):
+    open_id = message.source
+    t = "{id} {name} {birth_day} {group_name} {is_lunar_calendar} \n"
+    res = BirthDayRecord.objects.filter(open_id=open_id).all()
+    hi = BirthDayRecordSerializer(res, many=True)
+    response_text = str()
+    for x in hi.data:
+        response_text += t.format(**x)
+    return response_text
+
+
+@handler.filter(re.compile("^nansang delete \d.*"))
+def handler_delete(message):
+    record_id = int(message.content.strip(" ").split(" ")[-1])
+    s = BirthDayRecord.objects.filter(open_id=message.source, id=record_id).first()
+    if not s:
+        return "not found"
+    s.delete()
+    return 'success'
