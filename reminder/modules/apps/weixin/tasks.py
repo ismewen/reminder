@@ -2,9 +2,9 @@ import arrow
 from celery import group
 from celery.utils.log import get_task_logger
 
-from services import celery
-from services.wechat import wechat_client
-from weixin.models import BirthDayRecord
+from common.services.celery import celery
+from common.services.wechat import wechat_client
+from modules.apps.weixin.models import BirthDayRecord
 
 
 @celery.task()
