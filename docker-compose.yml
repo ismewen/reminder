@@ -3,7 +3,7 @@ services:
   reminder:
     build: ./reminder
     volumes:
-      - ./static:/code/static  # <-- bind the static volume
+      - ./static:/code/reminder/static  # <-- bind the static volume
       - media_volume:/code/media  # <-- bind the media volume
       - ./logger_file:/code/logger_file
     networks:
