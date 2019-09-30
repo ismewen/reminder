@@ -1,6 +1,6 @@
-DB_USER=nansang
-DB_NAME=nansang
-DB_PASSWORD=nansang
+DB_USER=reminder
+DB_NAME=reminder
+DB_PASSWORD=reminder
 DB_HOST=db
 POSTGRES_USER=reminder
 POSTGRES_PASSWORD=reminder
