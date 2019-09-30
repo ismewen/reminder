@@ -1,7 +1,7 @@
 version: '3'
 services:
-  nansang:
-    build: ./nansang
+  reminder:
+    build: ./reminder
     volumes:
       - static_volume:/code/static  # <-- bind the static volume
       - media_volume:/code/media  # <-- bind the media volume
@@ -19,25 +19,21 @@ services:
     env_file:
       - config_env/common_env
 
-  nansang-celery:
-    build: ./nansang
+  reminder-celery:
+    build: ./reminder
     networks:
       - db_network
       - redis_network
       - mq
     depends_on:
       - db
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-      - REDIS_HOST=redis
-      - C_FORCE_ROOT=True
     env_file:
       - config_env/common_env
     command: 'celery -A services worker -l info'
     restart: always
 
-  nansang-beat:
-    build: ./nansang
+  reminder-beat:
+    build: ./reminder
     networks:
       - db_network
       - redis_network
@@ -62,7 +58,7 @@ services:
       - static_volume:/code/static  # <-- bind the static volume
       - media_volume:/code/media  # <-- bind the media volume
     depends_on:
-      - nansang
+      - reminder
     networks:
       - nginx_network
 
@@ -72,10 +68,6 @@ services:
       - db_network
     volumes:
       - db_volume:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=nansang
-      - POSTGRES_PASSWORD=nansang
-      - POSTGRES_DB=nansang
     env_file:
       - config_env/common_env
     restart: always

@@ -1,0 +1,12 @@
+DB_USER=nansang
+DB_NAME=nansang
+DB_PASSWORD=nansang
+DB_HOST=db
+POSTGRES_USER=reminder
+POSTGRES_PASSWORD=reminder
+POSTGRES_DB=reminder
+RABBITMQ_HOST=rabbitmq
+REDIS_HOST=redis
+C_FORCE_ROOT=True
+RABBITMQ_HOST=rabbitmq
+REDIS_HOST=redis
