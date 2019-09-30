@@ -125,4 +125,5 @@ dmypy.json
 .pyre/
 sourceview/
 .idea/
-static/*
+reminder/reminder/static
+
