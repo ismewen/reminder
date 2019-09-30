@@ -63,7 +63,7 @@ services:
     volumes:
       - redis_volume:/data
     ports:
-      - '6378:6379'
+      - '6376:6379'
     command: redis-server --appendonly yes
     restart: always
 
