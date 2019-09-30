@@ -46,19 +46,6 @@ services:
     command: 'celery -A reminder beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler'
     restart: always
 
-  nginx:
-    image: nginx:1.13
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - static_volume:/code/static  # <-- bind the static volume
-      - media_volume:/code/media  # <-- bind the media volume
-    depends_on:
-      - reminder
-    networks:
-      - nginx_network
-
   db:
     image: postgres:10
     networks:
