@@ -1,0 +1,116 @@
+version: '3'
+services:
+  nansang:
+    build: ./nansang
+    volumes:
+      - static_volume:/code/static  # <-- bind the static volume
+      - media_volume:/code/media  # <-- bind the media volume
+      - ./logger_file:/code/logger_file
+    networks:
+      - nginx_network
+      - db_network
+      - redis_network
+      - mq
+    depends_on:
+      - db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+    env_file:
+      - config_env/common_env
+
+  nansang-celery:
+    build: ./nansang
+    networks:
+      - db_network
+      - redis_network
+      - mq
+    depends_on:
+      - db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - C_FORCE_ROOT=True
+    env_file:
+      - config_env/common_env
+    command: 'celery -A services worker -l info'
+    restart: always
+
+  nansang-beat:
+    build: ./nansang
+    networks:
+      - db_network
+      - redis_network
+      - mq
+    depends_on:
+      - db
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+      - C_FORCE_ROOT=True
+    env_file:
+      - config_env/common_env
+    command: 'celery -A services beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler'
+    restart: always
+
+  nginx:
+    image: nginx:1.13
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/code/static  # <-- bind the static volume
+      - media_volume:/code/media  # <-- bind the media volume
+    depends_on:
+      - nansang
+    networks:
+      - nginx_network
+
+  db:
+    image: postgres:10
+    networks:
+      - db_network
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=nansang
+      - POSTGRES_PASSWORD=nansang
+      - POSTGRES_DB=nansang
+    env_file:
+      - config_env/common_env
+    restart: always
+
+  redis:
+    image: redis:3.2
+    networks:
+      - redis_network
+    volumes:
+      - redis_volume:/data
+    ports:
+      - '6378:6379'
+    command: redis-server --appendonly yes
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3.7.4-management
+    networks:
+      - mq
+    ports:
+      - '5673:5672'
+      - '15673:15672'
+    volumes:
+      - rabbitmq_volume:/var/lib/rabbitmq
+    restart: always
+
+networks:
+  nginx_network:
+  db_network:
+  redis_network:
+  mq:
+
+volumes:
+  db_volume:
+  static_volume:
+  media_volume:
+  rabbitmq_volume:
+  redis_volume:

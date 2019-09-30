@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'modules.apps.wechat',
+    'modules.apps.weixin',
 
     "django_celery_beat"
 ]

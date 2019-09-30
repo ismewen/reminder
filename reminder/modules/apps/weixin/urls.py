@@ -18,7 +18,3 @@ Including another URLconf
 # Additionally, we include login URLs for the browsable API.
 
 
-from services.routers import router
-from .views import WeixinViewSet
-
-router.custom_register(WeixinViewSet, base_name="weixin")
