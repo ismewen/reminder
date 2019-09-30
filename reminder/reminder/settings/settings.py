@@ -72,7 +72,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'reminder.wsgi.application'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
