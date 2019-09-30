@@ -131,9 +131,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+
 
 # celery config
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', 5672)
+RABBITMQ_USER = 'guest'
+RABBITMQ_PASSWORD = 'guest'
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('os.REDIS_PORT', 6379)
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+CELERY_BROKER_URL = 'amqp://%(user)s:%(password)s@%(host)s:%(port)s//' % {
+    'user': RABBITMQ_USER,
+    'password': RABBITMQ_PASSWORD,
+    'host': RABBITMQ_HOST,
+    'port': RABBITMQ_PORT,
+}
 CELERY_TASK_RESULT_EXPIRES = 10
 CELERY_TIMEZONE = "Asia/Shanghai"
 CELERY_ENABLE_UTC = False
