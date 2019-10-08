@@ -166,6 +166,11 @@ COMPONENT_ENCODINGAESKEY = 'PSn0fA8KwTBjTTx9Wcu5rCyzN8mkOmw74n54XfMSxx5'
 
 
 SERVER_URL = "reminder.tripanels.com"
-REDIS_CON_URI = os.getenv("REDIS_CON_URI", 'redis://localhost:6379/0')
+REDIS_CON_URI = os.getenv("REDIS_CON_URI", 'redis://redis:6379/0')
 
 AUTH_USER_MODEL = 'oauth.User'
+
+try:
+    from .local_settings import *
+except ImportError as e:
+    pass
