@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 
 from django.conf import settings
 
+from common.services.wechat import wechat_client
 from modules.apps.oauth.models import User
 from modules.apps.weixin.models import BirthDayRecord
 from modules.apps.weixin.serializers import BirthDayRecordSerializer
@@ -118,10 +119,15 @@ def ns(message):
     group_name = ns[2]
     user_name = ns[3]
     user = User.objects.filter(open_id=message.source).first()
+    group_id = Group.get(group_name)
     if user:
-        user.group_id = Group.get(group_name)
+        if user.group_name != group_name:
+            user.group_name = group_name
+            wechat_client.group.move_user(user_id=message.source, group_id=group_id)
+        user.group_id = group_id
         user.username = user_name
     else:
         user = User(username=user_name, group_id=Group.get(group_name), open_id=message.source)
+        wechat_client.group.move_user(user_id=user.open_id, group_id=group_id)
     user.save()
     return "success"

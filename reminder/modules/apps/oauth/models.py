@@ -5,4 +5,6 @@ from django.db import models
 
 
 class User(AbstractUser):
+    group_name = models.CharField(max_length=128, verbose_name="Group Name")
+    group_id = models.IntegerField(verbose_name="group id")
     open_id = models.CharField(max_length=128, verbose_name="Wechat Open Id")
