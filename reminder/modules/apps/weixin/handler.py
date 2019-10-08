@@ -117,7 +117,7 @@ def ns(message):
         return "错误的格式，请参考ns upsert support|develop name"
     group_name = ns[2]
     user_name = ns[3]
-    user = User.objects.get(open_id=message.source)
+    user = User.objects.filter(open_id=message.source).first()
     if user:
         user.group_id = Group.get(group_name)
         user.username = user_name
