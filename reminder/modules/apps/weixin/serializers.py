@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from weixin.models import BirthDayRecord
+from modules.apps.weixin.models import BirthDayRecord
 
 
 class BirthDayRecordSerializer(serializers.ModelSerializer):

@@ -40,7 +40,9 @@ INSTALLED_APPS = [
 
     'modules.apps.weixin',
 
-    "django_celery_beat"
+    "django_celery_beat",
+    "django_extensions",
+    "oauth2_provider",
 ]
 
 MIDDLEWARE = [
@@ -160,3 +162,6 @@ COMPONENT_APP_ID = 'wxa6ba8c9872d2171e'
 COMPONENT_APP_SECRET = '63406ef65c738511acf71fa39da2d21c'
 COMPONENT_APP_TOKEN = 'weixin'
 COMPONENT_ENCODINGAESKEY = 'PSn0fA8KwTBjTTx9Wcu5rCyzN8mkOmw74n54XfMSxx5'
+
+
+SERVER_URL = "reminder.tripanels.com"

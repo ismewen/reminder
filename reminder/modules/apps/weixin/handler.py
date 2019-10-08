@@ -4,9 +4,9 @@ import re
 import requests
 from rest_framework.exceptions import ValidationError
 
-from nansang import settings
-from weixin.models import BirthDayRecord
-from weixin.serializers import BirthDayRecordSerializer
+from django.conf import settings
+from modules.apps.weixin.models import BirthDayRecord
+from modules.apps.weixin.serializers import BirthDayRecordSerializer
 
 
 class PoorHandler(object):

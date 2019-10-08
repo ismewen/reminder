@@ -18,3 +18,10 @@ Including another URLconf
 # Additionally, we include login URLs for the browsable API.
 
 
+from django.contrib import admin
+from django.urls import path
+from modules.apps.weixin import views
+
+urlpatterns = [
+    path("", views.WeiXinHandleView.as_view())
+]

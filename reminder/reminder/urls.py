@@ -14,8 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+
+from common.core import discovery
+
+discovery.discover_views()
 
 urlpatterns = [
+    path("weixin/", include('modules.apps.weixin.urls')),
     path('admin/', admin.site.urls),
 ]

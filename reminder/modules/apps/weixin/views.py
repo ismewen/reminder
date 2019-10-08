@@ -7,7 +7,8 @@ from wechatpy import parse_message, create_reply
 from wechatpy.exceptions import InvalidSignatureException
 from wechatpy.utils import check_signature
 
-from common.core.viewsets import APIView
+from rachel.routers import router
+from common.core.viewsets import APIView as CustomAPIView
 from modules.apps.weixin.handler import handler
 from modules.apps.weixin.models import BirthDayRecord
 from modules.apps.weixin.serializers import BirthDayRecordSerializer
@@ -15,7 +16,7 @@ from modules.apps.weixin.serializers import BirthDayRecordSerializer
 logger = logging.getLogger('django')
 
 
-class WeiXinAPIView(APIView):
+class WeiXinHandleView(APIView):
     def get(self, request, *args, **kwargs):
         logger.info("hello world %s %s %s" % (args, kwargs, request))
         signature = request.GET.get('signature', '')
@@ -42,10 +43,13 @@ class WeiXinAPIView(APIView):
         return response
 
 
-class WeixinViewSet(APIView):
-    name = "birthday"
+class WeiXinAPIView(CustomAPIView):
+    custom_name = "birthday"
     path = 'birthday'
     model = BirthDayRecord
     serializer_class = BirthDayRecordSerializer
     allow_actions = 'create', 'update', 'list'
     filter_fields = ('open_id', 'name')
+
+
+router.custom_register(WeiXinAPIView)
