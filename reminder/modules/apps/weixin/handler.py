@@ -5,9 +5,15 @@ import requests
 from rest_framework.exceptions import ValidationError
 
 from django.conf import settings
+
+from modules.apps.oauth.models import User
 from modules.apps.weixin.models import BirthDayRecord
 from modules.apps.weixin.serializers import BirthDayRecordSerializer
 
+Group = {
+    "support": 100,
+    "develop": 101,
+}
 
 class PoorHandler(object):
     """
@@ -58,7 +64,6 @@ uri = settings.SERVER_URL
 
 logger = logging.getLogger('django')
 
-
 @handler.filter(re.compile("^nansang add"))
 def nansang_add(message):
     mandatory_args = ["-n", "-b", "-g", "-l"]
@@ -103,3 +108,20 @@ def handler_delete(message):
         return "not found"
     s.delete()
     return 'success'
+
+
+@handler.filter(re.compile("^ns upsert"))
+def ns(message):
+    ns = message.content.strip(" ").split(" ")
+    if len(ns) < 4 or ns[2] not in ["support", "develop"]:
+        return "错误的格式，请参考ns upsert support|develop name"
+    group_name = ns[2]
+    user_name = ns[3]
+    user = User.objects.get(open_id=message.source)
+    if user:
+        user.group_id = Group.get(group_name)
+        user.username = user_name
+    else:
+        user = User(username=user_name, group_id=Group.get(group_name), open_id=message.source)
+    user.save()
+    return "success"

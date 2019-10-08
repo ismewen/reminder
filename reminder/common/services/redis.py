@@ -1,3 +1,4 @@
 from redis import Redis
+from django.conf import settings
 
-redis_client = Redis.from_url('redis://redis:6379/0')
+redis_client = Redis.from_url(settings.REDIS_CON_URI)
