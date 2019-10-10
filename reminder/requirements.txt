@@ -35,5 +35,7 @@ xmltodict==0.12.0
 zipp==0.6.0
 gunicorn==19.9.0
 django-extensions==2.2.3
+aio-pika==6.1.2
+
 
 
