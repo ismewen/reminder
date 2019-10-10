@@ -80,6 +80,7 @@ services:
       - rabbitmq_volume:/var/lib/rabbitmq
     restart: always
 
+
 networks:
   nginx_network:
   db_network:

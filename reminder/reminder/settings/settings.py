@@ -170,6 +170,13 @@ REDIS_CON_URI = os.getenv("REDIS_CON_URI", 'redis://redis:6379/0')
 
 AUTH_USER_MODEL = 'oauth.User'
 
+# amqp://guest:guest@localhost/
+RABBITMQ_URL = "amqp://{mq_user}:{mq_pwd}@{mq_host}/".format(
+    mq_user=RABBITMQ_USER,
+    mq_pwd=RABBITMQ_PASSWORD,
+    mq_host=RABBITMQ_HOST,
+)
+
 try:
     from .local_settings import *
 except ImportError as e:
