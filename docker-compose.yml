@@ -78,6 +78,9 @@ services:
       - '15673:15672'
     volumes:
       - rabbitmq_volume:/var/lib/rabbitmq
+    env_file:
+      - config_env/common_env
+
     restart: always
 
 
