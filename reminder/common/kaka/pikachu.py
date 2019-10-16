@@ -2,9 +2,12 @@ import os
 
 import asyncio
 import aio_pika
+import json
 
 import django
 from django.conf import settings
+
+from modules.worker.handle import pikachu_consumer
 
 
 class PikaChu(object):
@@ -48,10 +51,9 @@ class PikaChu(object):
         loop.run_forever()
 
     def on_message(self, message: aio_pika.IncomingMessage):
-        print("on message")
-        print("message")
-        print(message)
-        pass
+        import ipdb
+        ipdb.set_trace()
+        pikachu_consumer.send(sender=self, message=message)
 
     async def test_task(self):
         await self.initialize()

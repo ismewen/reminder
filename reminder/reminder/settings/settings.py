@@ -139,8 +139,8 @@ USE_TZ = True
 # celery config
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 RABBITMQ_PORT = os.getenv('RABBITMQ_PORT', 5672)
-RABBITMQ_USER = 'guest'
-RABBITMQ_PASSWORD = 'guest'
+RABBITMQ_USER = 'ismewen'
+RABBITMQ_PASSWORD = 'ismewen'
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = os.getenv('os.REDIS_PORT', 6379)
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)

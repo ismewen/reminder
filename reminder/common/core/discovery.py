@@ -12,3 +12,7 @@ def discover_views():
                 raise e
                 print("import error", e)
 
+
+def discovery_signal():
+    from modules.worker.handle import on_message
+
