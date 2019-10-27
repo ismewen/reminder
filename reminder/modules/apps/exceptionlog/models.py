@@ -10,3 +10,8 @@ class ExceptionRecord(models.Model):
     ctime = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
     utime = models.DateTimeField(auto_now=True)
 
+    def build_content(self):
+        str_format = "domain: {domain}\n" \
+                     "msg: {msg}\n" \
+                     "traceback: {traceback}"
+        return str_format.format(domain=self.url, msg=self.msg, traceback=self.traceback)

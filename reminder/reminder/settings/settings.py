@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'modules.apps.weixin',
     'modules.apps.oauth',
+    'modules.apps.exceptionlog',
 
     "django_celery_beat",
     "django_extensions",
@@ -176,6 +177,8 @@ RABBITMQ_URL = "amqp://{mq_user}:{mq_pwd}@{mq_host}/".format(
     mq_pwd=RABBITMQ_PASSWORD,
     mq_host=RABBITMQ_HOST,
 )
+
+
 
 try:
     from .local_settings import *
