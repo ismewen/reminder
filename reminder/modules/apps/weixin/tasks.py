@@ -38,7 +38,7 @@ def find_the_star(self):
     start = now.shift(days=-45)
     records = BirthDayRecord.objects.filter(birth_day__gte=start.date()).filter(birth_day__lte=now.date()).all()
     birth_day_records = [record for record in records if
-                         record.today_is_birth_day() and not redis_client.exists(self.obj.has_reminder_key)]
+                         record.today_is_birth_day() and not redis_client.exists(record.has_reminder_key)]
     if birth_day_records:
         group(notice_user.s(i.id) for i in birth_day_records)()
 
