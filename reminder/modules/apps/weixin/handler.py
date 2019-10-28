@@ -5,6 +5,7 @@ import requests
 from rest_framework.exceptions import ValidationError
 
 from django.conf import settings
+from wechatpy.events import SubscribeEvent
 
 from common.services.wechat import wechat_client
 from modules.apps.oauth.models import User
@@ -139,7 +140,6 @@ def ns(message):
     if len(ns) < 4 or ns[2] not in ["support", "develop"]:
         return "错误的格式，请参考ns upsert support|develop name"
     group_name = ns[2]
-    user_name = ns[3]
     user = User.objects.filter(open_id=message.source).first()
     group_id = Group.get(group_name)
     if user:
@@ -147,14 +147,34 @@ def ns(message):
             user.group_name = group_name
             wechat_client.group.move_user(user_id=message.source, group_id=group_id)
         user.group_id = group_id
-        user.username = user_name
     else:
-        user = User(username=user_name, group_id=Group.get(group_name), open_id=message.source)
+        user_info = wechat_client.user.get(message.source)
+        user = User(username=user_info.get("nickname"), group_id=Group.get(group_name), open_id=message.source)
         wechat_client.group.move_user(user_id=user.open_id, group_id=group_id)
     user.save()
     return "success"
 
 
 @event_handle.register('subscribe')
-def subscribe(message):
+def subscribe(message: SubscribeEvent):
     logger.info("start handle subscribe message %s " % str(message))
+    user = User.objects.all().filter(open_id=message.source).first()
+    if not user:
+        user_info = wechat_client.user.get(message.source)
+        user = User(username=user_info.get("nickname"),opend_id=message.source)
+        user.save()
+    else:
+        user.status = "Active"
+        user.save()
+
+
+@event_handle.register('unsubscribe')
+def unsubscribe(message: SubscribeEvent):
+    logger.info("start handle unsubscribe message %s" % str(message))
+    user = User.objects.all().filter(open_id=message.source).first()
+    if user:
+        user.status = "InActive"
+        user.save()
+
+
+
