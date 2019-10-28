@@ -10,9 +10,9 @@ lunar = sxtwl.Lunar()  # 实例化日历库
 
 
 class BirthDayRecord(models.Model):
+    user = models.ForeignKey('oauth.User', verbose_name="user", on_delete=models.CASCADE,blank=True, null=True)
     name = models.CharField(verbose_name="姓名", max_length=255)
     birth_day = models.DateField(verbose_name="生日")
-    group_name = models.CharField(verbose_name="分组", max_length=255, null=True, blank=True)
     __lunar_calendar_choices__ = (
         (1, "农历"),
         (2, "公历")

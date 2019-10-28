@@ -10,7 +10,7 @@ from . import models
 
 class BirthDayRecordAdmin(admin.ModelAdmin):
     list_display = [
-        "group_name", "name", "birth_day", "is_lunar_calendar", "group_name"
+        "user", "name", "birth_day", "is_lunar_calendar"
     ]
     search_fields = "name", "type",
     list_per_page = 20
