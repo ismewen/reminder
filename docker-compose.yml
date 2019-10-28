@@ -32,7 +32,7 @@ services:
       - db
     env_file:
       - config_env/common_env
-      command: 'python pikachu.py run'
+    command: 'python pikachu.py run'
     restart: always
 
   reminder-celery:
