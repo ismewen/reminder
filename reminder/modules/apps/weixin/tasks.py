@@ -37,10 +37,11 @@ def find_the_star(self):
     start = now.shift(days=-60)
     records = BirthDayRecord.objects.filter(birth_day__gte=start.date()).filter(birth_day__lte=now.date()).all()
     birth_day_records = [record for record in records if record.today_is_birth_day()]
-    group(notice_user.s(i.id) for i in birth_day_records)()
+    if birth_day_records:
+        group(notice_user.s(i.id) for i in birth_day_records)()
 
 
 @celery.task(bind=True)
 def notice_user(id):
     obj = BirthDayRecord.objects.get(id=id)
-    wechat_client.message.send_text(obj.open_id, "today is {name}'s birth day".format(name=obj.name))
+    wechat_client.message.send_text(obj.user.open_id, "今天是{name}的生日,别忘了送上你的祝福".format(name=obj.name))
