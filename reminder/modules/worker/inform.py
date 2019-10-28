@@ -38,8 +38,6 @@ class MattermostTransport(Inform):
         }
 
         res = requests.post(self.webhook, data=json.dumps(data), headers=headers)
-        import ipdb
-        ipdb.set_trace()
 
 
 
