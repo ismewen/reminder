@@ -161,7 +161,7 @@ def subscribe(message: SubscribeEvent):
     user = User.objects.all().filter(open_id=message.source).first()
     if not user:
         user_info = wechat_client.user.get(message.source)
-        user = User(username=user_info.get("nickname"),opend_id=message.source)
+        user = User(username=user_info.get("nickname"), opend_id=message.source)
         user.save()
     else:
         user.status = "Active"
