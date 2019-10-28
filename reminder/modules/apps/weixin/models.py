@@ -34,3 +34,8 @@ class BirthDayRecord(models.Model):
     @property
     def age(self):
         return datetime.now().year - self.birth_day.year
+
+    @property
+    def has_reminder_key(self):
+        return "HAS:REMINDER:FLAG:%s" % self.id
+
