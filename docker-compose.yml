@@ -17,6 +17,23 @@ services:
       - '9595:8000'
     env_file:
       - config_env/common_env
+  pikachu:
+    build: ./reminder
+    volumes:
+      - ./static:/code/reminder/static  # <-- bind the static volume
+      - media_volume:/code/media  # <-- bind the media volume
+      - ./logger_file:/code/logger_file
+    networks:
+      - nginx_network
+      - db_network
+      - redis_network
+      - mq
+    depends_on:
+      - db
+    env_file:
+      - config_env/common_env
+      command: 'python pikachu.py run'
+    restart: always
 
   reminder-celery:
     build: ./reminder

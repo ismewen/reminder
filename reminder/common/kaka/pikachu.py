@@ -70,6 +70,13 @@ class PikaChu(object):
     def publish(self, payload):
         if isinstance(payload, dict):
             payload = json.dumps(payload)
-        payload.encode()
+        payload = payload.encode()
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self._publish(payload))
+
+    def test(self):
+        payload = {
+            "type": "ticket",
+            "msg": "we all love php"
+        }
+        self.publish(payload=payload)
