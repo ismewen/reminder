@@ -17,7 +17,6 @@ class BirthDayRecord(models.Model):
         (1, "农历"),
         (2, "公历")
     )
-    open_id = models.CharField(verbose_name="微信openId", max_length=255)
     is_lunar_calendar = models.IntegerField(default=1, verbose_name="历法", choices=__lunar_calendar_choices__)
     ctime = models.DateTimeField(auto_now_add=True, verbose_name="姓名")
     utime = models.DateTimeField(auto_now=True)
