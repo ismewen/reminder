@@ -23,9 +23,13 @@ class BirthDayRecord(models.Model):
 
     def today_is_birth_day(self):
         now = datetime.now()
-        compare_date = lunar.getDayBySolar(now.year, now.month,
-                                           now.day) if self.is_lunar_calendar == 1 else self.birth_day
-        return self.birth_day.month == compare_date.m and self.birth_day.d == compare_date.day
+        if self.is_lunar_calendar == 1:
+            # 农历生日
+            compare_date = lunar.getDayByLunar(self.birth_day.year, self.birth_day.month, self.birth_day.day)
+        else:
+            # 公历生日
+            compare_date = lunar.getDayBySolar(self.birth_day.year, self.birth_day.month, self.birth_day.day)
+        return now.month == compare_date.m and now.day == compare_date.d
 
     @property
     def age(self):
