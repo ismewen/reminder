@@ -4,12 +4,13 @@ from django.http import HttpResponse
 from django.conf import settings
 from rest_framework.views import APIView
 from wechatpy import parse_message, create_reply
+from wechatpy.events import SubscribeEvent, BaseEvent
 from wechatpy.exceptions import InvalidSignatureException
 from wechatpy.utils import check_signature
 
 from rachel.routers import router
 from common.core.viewsets import APIView as CustomAPIView
-from modules.apps.weixin.handler import handler
+from modules.apps.weixin.handler import handler, event_handle
 from modules.apps.weixin.models import BirthDayRecord
 from modules.apps.weixin.serializers import BirthDayRecordSerializer
 
@@ -35,8 +36,11 @@ class WeiXinHandleView(APIView):
         logger.info("hello world %s %s %s" % (args, kwargs, request))
         logger.info("hello msg %s %s" % (msg.type, msg))
         res = 'this is a %s message %s ' % (msg.type, msg)
+        logger.info("receive %s message" % msg)
         if msg.type == "text":
             res = handler.handle_message(msg)
+        elif isinstance(msg, BaseEvent):
+            res = event_handle.handle_message(msg)
         reply = create_reply(res, msg)
         logger.info("reply message %s " % res)
         response = HttpResponse(reply.render(), content_type="application/xml")

@@ -16,6 +16,7 @@ Group = {
     "develop": 101,
 }
 
+
 class PoorHandler(object):
     """
     穷人版的handle,针对特定text回复
@@ -59,11 +60,32 @@ class PoorHandler(object):
                 return res
 
 
+class EventHandler(object):
+    handlers = dict()
+
+    def register(self, event_type):
+        def wraps(func):
+            self.handlers[event_type] = func
+            return func
+        return wraps
+
+    def handle_message(self, message):
+        func = self.get_handle(message.event)
+        if func:
+            return func(message)
+
+    def get_handle(self, event_type):
+        return self.handlers.get(event_type)
+
+
+event_handle = EventHandler()
+
 handler = PoorHandler()
 
 uri = settings.SERVER_URL
 
 logger = logging.getLogger('django')
+
 
 @handler.filter(re.compile("^nansang add"))
 def nansang_add(message):
@@ -131,3 +153,8 @@ def ns(message):
         wechat_client.group.move_user(user_id=user.open_id, group_id=group_id)
     user.save()
     return "success"
+
+
+@event_handle.register('subscribe')
+def subscribe(message):
+    logger.info("start handle subscribe message %s " % str(message))
