@@ -137,7 +137,7 @@ def handler_delete(message):
 @handler.filter(re.compile("^ns upsert"))
 def ns(message):
     ns = message.content.strip(" ").split(" ")
-    if len(ns) < 4 or ns[2] not in ["support", "develop"]:
+    if len(ns) < 3 or ns[2] not in ["support", "develop"]:
         return "错误的格式，请参考ns upsert support|develop name"
     group_name = ns[2]
     user = User.objects.filter(open_id=message.source).first()
