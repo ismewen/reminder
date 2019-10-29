@@ -49,15 +49,18 @@ class BirthDayRecord(models.Model):
 
 
 def create_today_star_user_for_test():
-    user = User.objects.get(name="ethan")
+    user = User.objects.get(username="ethan")
     today = arrow.now().date()
     if not user:
         return
-    lunar_record = BirthDayRecord.objects.get_or_create(user=user, is_lunar_calendar=1, name="农历-ethan")
+    lunar_record = BirthDayRecord.objects.get_or_create(user=user,
+                                                        is_lunar_calendar=1, name="农历-ethan", birth_day=today)[0]
     day = lunar.getDayBySolar(today.year, today.month, today.day)
-    birth_day = arrow.get(birth_day="%s-%s-%s" % (today.yar, ymc[day.Lmc], day.Ldi + 1)).date()
+    birth_day = arrow.get("%s-%s-%s" % (today.year, ymc[day.Lmc], day.Ldi + 1)).date()
     lunar_record.birth_day = birth_day
-    solar_record = BirthDayRecord.objects.get_or_create(user=user, is_lunar_calendar=2, name="公历-ethan")
+    lunar_record.save()
+    solar_record = BirthDayRecord.objects.get_or_create(user=user,
+                                                        is_lunar_calendar=2, name="公历-ethan", birth_day=today)[0]
     solar_record.birth_day = today
     solar_record.save()
 
