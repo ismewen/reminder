@@ -6,11 +6,19 @@ import sxtwl
 from django.db import models
 
 # Create your models here.
+from modules.apps.oauth.models import User
+
 lunar = sxtwl.Lunar()  # 实例化日历库
+ymc = [11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+rmc = [
+    "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
+    "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
+    "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十", "卅一"
+]
 
 
 class BirthDayRecord(models.Model):
-    user = models.ForeignKey('oauth.User', verbose_name="user", on_delete=models.CASCADE,blank=True, null=True)
+    user = models.ForeignKey('oauth.User', verbose_name="user", on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(verbose_name="姓名", max_length=255)
     birth_day = models.DateField(verbose_name="生日")
     __lunar_calendar_choices__ = (
@@ -38,4 +46,21 @@ class BirthDayRecord(models.Model):
     @property
     def has_reminder_key(self):
         return "HAS:REMINDER:FLAG:%s" % self.id
+
+
+def create_today_star_user_for_test():
+    user = User.objects.get(name="ethan")
+    today = arrow.now().date()
+    if not user:
+        return
+    lunar_record = BirthDayRecord.objects.get_or_create(user=user, is_lunar_calendar=1, name="农历-ethan")
+    day = lunar.getDayBySolar(today.year, today.month, today.day)
+    birth_day = arrow.get(birth_day="%s-%s-%s" % (today.yar, ymc[day.Lmc], day.Ldi + 1)).date()
+    lunar_record.birth_day = birth_day
+    solar_record = BirthDayRecord.objects.get_or_create(user=user, is_lunar_calendar=2, name="公历-ethan")
+    solar_record.birth_day = today
+    solar_record.save()
+
+
+
 

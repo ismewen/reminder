@@ -33,7 +33,7 @@ class PikaChu(object):
         )
         self.exchange = exchange
         # declare queue
-        queue = await channel.declare_queue(durable=True)
+        queue = await channel.declare_queue(name="jcy", durable=True)
 
         self.queue = queue
         # bind exchange
