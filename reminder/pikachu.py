@@ -15,9 +15,13 @@ if __name__ == '__main__':
     discovery.discover_views()
     discovery.discovery_signal()
     from common.kaka.pikachu import PikaChu
+    from django.conf import settings
     parser.add_argument('pikachu', help='Go ahead, Pikachu', choices=["run", "test"])
     arguments = parser.parse_args()
+    print(" **** start init pikachu ***")
+    print("settings RABBITMQ_URL %s" % settings.RABBITMQ_URL)
     pikachu = PikaChu()
+    print(" *** init down ***")
     action = arguments.pikachu
     if action == "run":
         try:
