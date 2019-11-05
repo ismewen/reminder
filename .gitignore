@@ -126,4 +126,4 @@ dmypy.json
 sourceview/
 .idea/
 reminder/reminder/static
-
+config_env/

@@ -83,8 +83,6 @@ services:
       - redis_network
     volumes:
       - redis_volume:/data
-    ports:
-      - '6376:6379'
     command: redis-server --appendonly yes
     restart: always
 
