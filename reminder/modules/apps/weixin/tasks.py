@@ -50,7 +50,6 @@ def notice_user(id):
     current_date = arrow.get(obj.birth_day).format('YYYY-MM-DD')
     way = "农历" if obj.is_lunar_calendar == 1 else "公历"
     text = "今天是{way}{current_date},{name}过生日,别忘了送上你的祝福".format(way=way, current_date=current_date, name=obj.name)
-    wechat_client.message.send_text(obj.user.open_id, text)
     inform = MattermostTransport({"type": "birthday"})
     inform.inform(text)
     redis_client.set(obj.has_reminder_key, 1, 60 * 60 * 24)

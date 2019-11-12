@@ -49,7 +49,7 @@ class BirthDayRecord(models.Model):
 
 
 def create_today_star_user_for_test():
-    user = User.objects.get(username="ethan")
+    user = User.objects.filter(username="ethan").first()
     today = arrow.now().date()
     if not user:
         return
