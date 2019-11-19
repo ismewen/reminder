@@ -53,7 +53,7 @@ class ExceptionProcessor(Processor):
             "traceback": self.payload.get("traceback_info")
         }
         if msg == "watch function has exception":
-            continue
+            return
         record = ExceptionRecord(**kwargs)
         record.save()
         content = record.build_content()
