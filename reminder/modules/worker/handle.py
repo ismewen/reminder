@@ -55,7 +55,7 @@ class ExceptionProcessor(Processor):
         record = ExceptionRecord(**kwargs)
         record.save()
         content = record.build_content()
-        print("start to inform")
+        print("to inform")
         self.inform(content=content)
 
 
