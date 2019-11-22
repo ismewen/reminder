@@ -5,9 +5,9 @@
 - exception提醒
 
 ### 生日提醒
-- 1. 关注微信号(后台自动生成用户)
-- 2. 登录django 后台，添加birth day记录
-- 3. celery 轮训添加的记录,找到今天生日的记录，通过微信号和mattermost给予提醒
+1. 关注微信号(后台自动生成用户)
+2. 登录django 后台，添加birth day记录
+3. celery 轮训添加的记录,找到今天生日的记录，通过微信号和mattermost给予提醒
 
 
 ### tickets提醒
@@ -15,8 +15,8 @@
 
 
 ### exception 提醒
-- 1.为logger.exception添加补丁，调用exception的时候，往mq队列扔信息
-- 2.reminder 监听消息队列，通过mattermost 给予提醒
+1. 为logger.exception添加补丁，调用exception的时候，往mq队列扔信息
+2. reminder 监听消息队列，通过mattermost 给予提醒
 
 
 ### more
